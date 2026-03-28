@@ -1,0 +1,99 @@
+{
+  "name": "Discord Bot - Subworkflow - No as a Service",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "id": "c055762a-8fe7-4141-a639-df2372f30060",
+      "typeVersion": 1.1,
+      "name": "When Executed by Another Workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        -160,
+        352
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bab276bd-2fec-4965-825c-cb130275be97",
+              "name": "data",
+              "value": "={{ $json.reason }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        256,
+        352
+      ],
+      "id": "84e10c3b-bd18-4aa7-8f96-f687d03ec477",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "url": "https://naas.daniilmira.com/no",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        48,
+        336
+      ],
+      "id": "1ecaee6b-68bf-4597-9ae8-710b19367b55",
+      "name": "HTTP Request"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "d346e248-b0f2-4c0a-b222-70a115fc198f",
+  "meta": {
+    "instanceId": ""
+  },
+  "id": "PyM1MIRYiwavziTT",
+  "tags": [
+    {
+      "updatedAt": "2026-03-12T13:27:03.823Z",
+      "createdAt": "2026-03-12T13:27:03.823Z",
+      "id": "juYSPByCC0Ei2J0X",
+      "name": "Discord"
+    }
+  ]
+}

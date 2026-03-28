@@ -1,0 +1,144 @@
+{
+  "name": "Discord Bot - Subworkflow - WoW RSS Reader",
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "// Alle Items aus dem vorherigen Node holen\nconst all = $input.all();\n\nconst now = new Date();\nconst since = new Date(now.getTime() - 12 * 60 * 60 * 1000);\n\nconst results = [];\n\n// HTML escapen (Telegram mag nur sauberes HTML)\nfunction esc(str = \"\") {\n  return str\n    .toString()\n    .replace(/&/g, \"&amp;\")\n    .replace(/</g, \"&lt;\")\n    .replace(/>/g, \"&gt;\");\n}\nfor (const item of all) {\n  const i = item.json || {};\n  const rawDate = i.pubDate || i.isoDate || i.date;\n  if (!rawDate) continue;\n\n  const d = new Date(rawDate);\n  if (isNaN(d)) continue;\n  if (d < since) continue;\n\n  let source = i.author;\n  if (!source && i.link) {\n    try {\n      const url = new URL(i.link);\n      source = url.hostname.replace(\"www.\", \"\");\n    } catch {}\n  }\n\n  results.push({\n    title: esc(i.title || \"(no title)\"),\n    link: i.link || \"#\",\n    dateObj: d,\n    when: esc(\n      d.toLocaleString(\"de-DE\", {\n        day: \"2-digit\",\n        month: \"2-digit\",\n        year: \"numeric\",\n        hour: \"2-digit\",\n        minute: \"2-digit\",\n      })\n    ),\n    source: esc(source || \"unbekannt\"),\n  });\n}\n\n// NEUSTE zuerst (echtes Date-Sort)\nresults.sort((a, b) => b.dateObj - a.dateObj);\n\n// Text als HTML für Telegram\nlet text = \"*WoW Head News – letzte 12h*\\n\\n\";\n\nif (results.length === 0) {\n  text += \"Keine neuen Artikel in den letzten 12 Stunden.\";\n} else {\n  text += results\n    .map((r) => {\n      return `\n${r.link}\n`.trim();\n    })\n    .join(\"\\n\");\n}\n\nreturn [\n  {\n    json: {\n      telegramText: text,\n      count: results.length,\n    },\n  },\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -752,
+        -144
+      ],
+      "id": "1a1353fd-62af-4833-860d-80a5977fb8e1",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -1168,
+        -144
+      ],
+      "id": "b6363b79-a6f5-4094-9939-f915b3bd4ab3",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "url": "https://www.wowhead.com/news/rss/all",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        -960,
+        -144
+      ],
+      "id": "3b6ee5b2-3348-459b-894f-058598128bf9",
+      "name": "Wowhead news"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "788ea7d0-83e2-4fa0-ba71-02ddb57ba7ee",
+              "name": "data",
+              "value": "={{ $json.telegramText }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -576,
+        -144
+      ],
+      "id": "bb5ea317-6c23-4334-a01d-2a0281d60eab",
+      "name": "Edit Fields"
+    }
+  ],
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "subworkflow_id": "gmcnEINViHdLalml",
+          "name": "wownews",
+          "id": 2,
+          "createdAt": "2026-03-04T14:58:05.543Z",
+          "updatedAt": "2026-03-04T14:58:10.424Z"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Wowhead news",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wowhead news": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "04521abb-47b9-4cd2-bdff-fa971603cc3a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": ""
+  },
+  "id": "gmcnEINViHdLalml",
+  "tags": [
+    {
+      "updatedAt": "2026-03-12T13:27:03.823Z",
+      "createdAt": "2026-03-12T13:27:03.823Z",
+      "id": "juYSPByCC0Ei2J0X",
+      "name": "Discord"
+    }
+  ]
+}
