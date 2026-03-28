@@ -1,8 +1,8 @@
-# <img src="https://cdn.jsdelivr.net/npm/@mdi/svg@latest/svg/robot.svg" width="32" valign="middle"> Discord Bot — n8n Workflow
+# <img src="https://api.iconify.design/mdi/robot.svg?color=%23FF6D5A" width="32" valign="middle"> Discord Bot — n8n Workflow
 
 A Discord slash command bot built entirely in [n8n](https://n8n.io). No custom code needed to add new commands — just create a subworkflow and register it in a lookup table.
 
-## <img src="https://cdn.jsdelivr.net/npm/@mdi/svg@latest/svg/lightning-bolt.svg" width="20" valign="middle"> How it works
+## <img src="https://api.iconify.design/mdi/lightning-bolt.svg?color=%23FF6D5A" width="20" valign="middle"> How it works
 
 The main workflow receives Discord interactions via webhook, immediately sends a deferred response (`type: 5`) to satisfy Discord's 3-second timeout, then looks up the command name in an n8n DataTable to find the matching subworkflow. It executes that subworkflow, waits for the result, and posts the reply back to Discord.
 
@@ -10,14 +10,14 @@ The main workflow receives Discord interactions via webhook, immediately sends a
 Discord → Webhook → ACK (type:5) → DataTable lookup → Execute Subworkflow → Reply to Discord
 ```
 
-## <img src="https://cdn.jsdelivr.net/npm/@mdi/svg@latest/svg/wrench.svg" width="20" valign="middle"> Setup
+## <img src="https://api.iconify.design/mdi/wrench.svg?color=%23FF6D5A" width="20" valign="middle"> Setup
 
 ### Prerequisites
 
 - A running n8n instance (self-hosted or n8n Cloud)
 - A Discord application with slash commands registered in the [Discord Developer Portal](https://discord.com/developers/applications)
 
-### <img src="https://cdn.jsdelivr.net/npm/@mdi/svg@latest/svg/import.svg" width="18" valign="middle"> 1. Import the workflows
+### <img src="https://api.iconify.design/mdi/import.svg?color=%23FF6D5A" width="18" valign="middle"> 1. Import the workflows
 
 Import all three JSON files into your n8n instance:
 
@@ -26,7 +26,7 @@ Import all three JSON files into your n8n instance:
 
 After import, activate each workflow manually.
 
-### <img src="https://cdn.jsdelivr.net/npm/@mdi/svg@latest/svg/table.svg" width="18" valign="middle"> 2. Create the DataTable
+### <img src="https://api.iconify.design/mdi/table.svg?color=%23FF6D5A" width="18" valign="middle"> 2. Create the DataTable
 
 Create an n8n **DataTable** named `Discord Bot - Matching` with two columns:
 
@@ -37,7 +37,7 @@ Create an n8n **DataTable** named `Discord Bot - Matching` with two columns:
 
 Open the main workflow (`Discord Bot Command`), go to the **Get row(s)** node, and point it to your newly created DataTable.
 
-### <img src="https://cdn.jsdelivr.net/npm/@mdi/svg@latest/svg/webhook.svg" width="18" valign="middle"> 3. Connect Discord
+### <img src="https://api.iconify.design/mdi/webhook.svg?color=%23FF6D5A" width="18" valign="middle"> 3. Connect Discord
 
 In the Discord Developer Portal, set your bot's **Interactions Endpoint URL** to:
 
@@ -47,11 +47,11 @@ https://<your-n8n-instance>/webhook/<your-webhook-id>
 
 The webhook ID is shown in the **Webhook** node of the main workflow after import.
 
-### <img src="https://cdn.jsdelivr.net/npm/@mdi/svg@latest/svg/plus-circle.svg" width="18" valign="middle"> 4. Register your subworkflows
+### <img src="https://api.iconify.design/mdi/plus-circle.svg?color=%23FF6D5A" width="18" valign="middle"> 4. Register your subworkflows
 
 For each slash command, add one row to the DataTable with the command name and the n8n workflow ID of its subworkflow.
 
-## <img src="https://cdn.jsdelivr.net/npm/@mdi/svg@latest/svg/puzzle.svg" width="20" valign="middle"> Adding a new command
+## <img src="https://api.iconify.design/mdi/puzzle.svg?color=%23FF6D5A" width="20" valign="middle"> Adding a new command
 
 1. Create a new n8n workflow that starts with a **When Executed by Another Workflow** trigger
 2. Do whatever you want — call an API, run some code, etc.
@@ -60,14 +60,14 @@ For each slash command, add one row to the DataTable with the command name and t
 
 That's it. No changes to the main workflow needed.
 
-## <img src="https://cdn.jsdelivr.net/npm/@mdi/svg@latest/svg/folder-open.svg" width="20" valign="middle"> Example subworkflows
+## <img src="https://api.iconify.design/mdi/folder-open.svg?color=%23FF6D5A" width="20" valign="middle"> Example subworkflows
 
 | File | What it does |
 |---|---|
 | `example subworkflows/Discord Bot - Subworkflow - No as a Service.json` | Returns a random witty "no" reason from [naas.daniilmira.com](https://naas.daniilmira.com/no) |
 | `example subworkflows/Discord Bot - Subworkflow - WoW RSS Reader.json` | Fetches [Wowhead](https://www.wowhead.com) news and returns articles from the last 12 hours |
 
-## <img src="https://cdn.jsdelivr.net/npm/@mdi/svg@latest/svg/code-braces.svg" width="20" valign="middle"> Subworkflow contract
+## <img src="https://api.iconify.design/mdi/code-braces.svg?color=%23FF6D5A" width="20" valign="middle"> Subworkflow contract
 
 Every subworkflow must return a `data` field containing the message string to post to Discord:
 
